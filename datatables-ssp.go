@@ -11,6 +11,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 )
 
+// Request requset struct
 type Request struct {
 	Draw    int             `json:"draw"`
 	Columns []RequestColumn `json:"columns"`
@@ -20,6 +21,7 @@ type Request struct {
 	Search  RequestSearch   `json:"search"`
 }
 
+// RequestColumn requset column struct
 type RequestColumn struct {
 	Data       string
 	Name       string
@@ -28,26 +30,32 @@ type RequestColumn struct {
 	Search     RequestSearch
 }
 
+// RequestOrder requset Order struct
 type RequestOrder struct {
 	Column int    `json:"column"`
 	Dir    string `json:"dir"`
 }
 
+// RequestSearch requset search struct
 type RequestSearch struct {
 	Value string `json:"value"`
 	Regex string `json:"regx"`
 }
 
+// ColumnInStruct struct for input column
 type ColumnInStruct map[string]string
 
+// DataStruct struct for data
 type DataStruct struct {
 	DataItem map[string]string
 }
 
+// ColumnOutStruct struct for output column
 type ColumnOutStruct struct {
 	Row map[string]string
 }
 
+// OutPutStruct struct for datatables output
 type OutPutStruct struct {
 	Draw            int               `json:"draw"`
 	RecordsTotal    int               `json:"recordsTotal"`
@@ -55,6 +63,7 @@ type OutPutStruct struct {
 	Data            []ColumnOutStruct `json:"data"`
 }
 
+// DBConnOptions option use for database connection
 type DBConnOptions struct {
 	Driver             string
 	Username, Password string
@@ -177,7 +186,8 @@ func filter(request Request, columns []ColumnInStruct, bindings []string) (where
 	return where
 }
 
-func simple(request Request, conn *sqlx.DB, table string, primaryKey string, columns []ColumnInStruct) OutPutStruct {
+// Simple get datatables output
+func Simple(request Request, conn *sqlx.DB, table string, primaryKey string, columns []ColumnInStruct) OutPutStruct {
 
 	var bindings []string
 	db(conn, nil)
@@ -221,7 +231,8 @@ func simple(request Request, conn *sqlx.DB, table string, primaryKey string, col
 	return output
 }
 
-func complex(request Request, conn *sqlx.DB, table string, primaryKey string, columns []ColumnInStruct, whereResult string, whereAll string) OutPutStruct {
+// Complex get datatables output
+func Complex(request Request, conn *sqlx.DB, table string, primaryKey string, columns []ColumnInStruct, whereResult string, whereAll string) OutPutStruct {
 
 	var bindings []string
 	db(conn, nil)
